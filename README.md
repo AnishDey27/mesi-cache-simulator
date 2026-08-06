@@ -52,7 +52,7 @@ flowchart TD
 ## Key Features
 
 * **Trace-Driven Execution Engine:** Parses per-core Read/Write instruction traces to execute instructions sequentially (strictly one core at a time), ensuring a deterministic step-by-step flow while tracking global hit/miss ratios, cycle penalties, and System AMAT.
-* **Real-Hardware FSM & Bus Modeling:** Implements independent core controllers and a centralized snoop bus for complete MESI protocol state transitions (M, E, S, I) handling local requests (`PrRd`, `PrWr`) and remote snoop signals (`BusRd`, `BusRdX`, `BusUpgr`, `Flush`).
+* **Real-Hardware FSM & Bus Modeling:** Implements independent core controllers and a centralized snoop bus for complete MESI protocol state transitions (M, E, S, I) handling local requests (`PrRd`, `PrWr`) and snoop signals (`BusRd`, `BusRdX`, `BusUpgr`, `Flush`).
 * **Hardware-Accurate Latencies:** Dynamically calculates cycle costs based on parallel hardware lookups (L1 Cache Hit: **1 cycle** | Silent State Upgrades: **1 cycle** | Shared Write Upgrades: **3 cycles** | Peer-to-Peer Cache Intervention: **18 cycles** | Main Memory Fetch / Dirty Eviction: **103 cycles**).
 * **Tree Pseudo-LRU (PLRU) Eviction:** Implements a custom bitwise tree traversal algorithm inside set-associative cache arrays to manage capacity and conflict limits, forcing dirty-line writebacks (`FLUSH`) to main memory.
 * **Control-Plane Accuracy:** Accurately models FSM states, cycle penalties, and bus traffic without carrying the physical overhead of moving actual data payloads.
