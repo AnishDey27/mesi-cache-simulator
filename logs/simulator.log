@@ -1,0 +1,103 @@
+Core 0 PrRd 0x100 | MISS | BusRd            | 103 cycles
+Core 0 FETCH     | Main Memory fetch
+STATES -> Core 0: E, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 1 PrRd 0x140 | MISS | BusRd            | 103 cycles
+Core 1 FETCH     | Main Memory fetch
+STATES -> Core 0: I, Core 1: E, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 2 PrRd 0x180 | MISS | BusRd            | 103 cycles
+Core 2 FETCH     | Main Memory fetch
+STATES -> Core 0: I, Core 1: I, Core 2: E, Core 3: I
+-----------------------------------------------------------------
+Core 3 PrRd 0x1c0 | MISS | BusRd            | 103 cycles
+Core 3 FETCH     | Main Memory fetch
+STATES -> Core 0: I, Core 1: I, Core 2: I, Core 3: E
+-----------------------------------------------------------------
+Core 0 PrWr 0x100 | HIT  | (No Bus Traffic) | 1 cycles
+STATES -> Core 0: M, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrRd 0x100 | HIT  | (No Bus Traffic) | 1 cycles
+STATES -> Core 0: M, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 1 PrWr 0x140 | HIT  | (No Bus Traffic) | 1 cycles
+STATES -> Core 0: I, Core 1: M, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 2 PrRd 0x100 | MISS | BusRd            | 18 cycles
+Core 2 FETCH     | Peer cache-to-cache transfer from Core 0
+Core 0 FLUSH     | Protocol Snoop: Dirty data written back!
+STATES -> Core 0: S, Core 1: I, Core 2: S, Core 3: I
+-----------------------------------------------------------------
+Core 1 PrRd 0x100 | MISS | BusRd            | 18 cycles
+Core 1 FETCH     | Peer cache-to-cache transfer from Core 0
+STATES -> Core 0: S, Core 1: S, Core 2: S, Core 3: I
+-----------------------------------------------------------------
+Core 3 PrRd 0x100 | MISS | BusRd            | 18 cycles
+Core 3 FETCH     | Peer cache-to-cache transfer from Core 0
+STATES -> Core 0: S, Core 1: S, Core 2: S, Core 3: S
+-----------------------------------------------------------------
+Core 2 PrWr 0x100 | HIT  | BusUpgr          | 3 cycles
+STATES -> Core 0: I, Core 1: I, Core 2: M, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrWr 0x100 | MISS | BusRdX           | 18 cycles
+Core 0 FETCH     | Peer cache-to-cache transfer from Core 2
+Core 2 FLUSH     | Protocol Snoop: Dirty data written back!
+STATES -> Core 0: M, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrRd 0x200 | MISS | BusRd            | 103 cycles
+Core 0 FETCH     | Main Memory fetch
+STATES -> Core 0: E, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrRd 0x300 | MISS | BusRd            | 203 cycles
+Core 0 FETCH     | Main Memory fetch
+Core 0 FLUSH     | Eviction: Dirty data written to Main Memory
+STATES -> Core 0: E, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 1 PrRd 0x500 | MISS | BusRd            | 103 cycles
+Core 1 FETCH     | Main Memory fetch
+STATES -> Core 0: I, Core 1: E, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 2 PrWr 0x500 | MISS | BusRdX           | 18 cycles
+Core 2 FETCH     | Peer cache-to-cache transfer from Core 1
+STATES -> Core 0: I, Core 1: I, Core 2: M, Core 3: I
+-----------------------------------------------------------------
+Core 3 PrWr 0x500 | MISS | BusRdX           | 18 cycles
+Core 3 FETCH     | Peer cache-to-cache transfer from Core 2
+Core 2 FLUSH     | Protocol Snoop: Dirty data written back!
+STATES -> Core 0: I, Core 1: I, Core 2: I, Core 3: M
+-----------------------------------------------------------------
+Core 1 PrWr 0x500 | MISS | BusRdX           | 18 cycles
+Core 1 FETCH     | Peer cache-to-cache transfer from Core 3
+Core 3 FLUSH     | Protocol Snoop: Dirty data written back!
+STATES -> Core 0: I, Core 1: M, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrRd 0x500 | MISS | BusRd            | 18 cycles
+Core 0 FETCH     | Peer cache-to-cache transfer from Core 1
+Core 1 FLUSH     | Protocol Snoop: Dirty data written back!
+STATES -> Core 0: S, Core 1: S, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 0 PrRd 0x600 | MISS | BusRd            | 103 cycles
+Core 0 FETCH     | Main Memory fetch
+STATES -> Core 0: E, Core 1: I, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 1 PrRd 0x600 | MISS | BusRd            | 18 cycles
+Core 1 FETCH     | Peer cache-to-cache transfer from Core 0
+STATES -> Core 0: S, Core 1: S, Core 2: I, Core 3: I
+-----------------------------------------------------------------
+Core 2 PrRd 0x700 | MISS | BusRd            | 103 cycles
+Core 2 FETCH     | Main Memory fetch
+STATES -> Core 0: I, Core 1: I, Core 2: E, Core 3: I
+-----------------------------------------------------------------
+Core 3 PrWr 0x700 | MISS | BusRdX           | 18 cycles
+Core 3 FETCH     | Peer cache-to-cache transfer from Core 2
+STATES -> Core 0: I, Core 1: I, Core 2: I, Core 3: M
+-----------------------------------------------------------------
+=================================================================
+                     SYSTEM STATISTICS                           
+=================================================================
+Total Accesses : 23
+Total Cycles   : 1213
+Global Hits    : 4 (17.39%)
+Global Misses  : 19 (82.61%)
+System AMAT    : 52.74 cycles
+=================================================================

@@ -1,0 +1,46 @@
+# Phase 1: Initial cold misses
+# Just reading some initial data to get cold misses and put each core into the Exclusive (E) state.
+0 R 0x100
+1 R 0x140
+2 R 0x180
+3 R 0x1C0
+
+# Phase 2: Local hits and silent upgrades
+# Writing to our Exclusive lines. This shouldn't cause any bus traffic since the core already owns it.
+0 W 0x100
+0 R 0x100
+1 W 0x140
+
+# Phase 3: Testing Shared states and cache-to-cache transfers
+# Making the other cores read the same data so they all go to Shared (S). Should take 18 cycles.
+2 R 0x100
+1 R 0x100
+3 R 0x100
+
+# Phase 4: Writing to a Shared line
+# Core 2 writes to the shared data. It needs to send a BusUpgr to invalidate the other cores.
+2 W 0x100
+
+# Phase 5: Writing to someone else's Modified line (The difference from MOESI)
+# Core 0 wants to write to data that Core 2 has modified. Testing the BusRdX signal to steal it.
+0 W 0x100
+
+# Phase 6: Testing capacity limits and PLRU evictions
+# Our sets only hold 2 lines. Let's force Core 0 to evict 0x100 (which is dirty) and see if it flushes to memory.
+0 R 0x200
+0 R 0x300
+
+# Phase 7: High contention between cores
+# A bunch of cores fighting over the same address to see if the states bounce back and forth correctly.
+1 R 0x500
+2 W 0x500
+3 W 0x500
+1 W 0x500
+0 R 0x500
+
+# Phase 8: Reading an Exclusive line
+# Testing what happens when a core reads an Exclusive line. It should just share it without flushing anything to memory.
+0 R 0x600
+1 R 0x600
+2 R 0x700
+3 W 0x700
