@@ -64,19 +64,20 @@ The simulator is fully parameterized.
 - **4-Core SMP**
 - **64-Byte** cache lines
 - **2-way set-associative** cache (**4 sets**)
+
 ## Scenario Coverage
 
 * **The "4 C's" of Cache Misses:** Deterministically models Compulsory (cold), Capacity, Conflict, and Coherence misses.
 * **High-Contention Handling:** Accurately simulates cache line bouncing when multiple threads fiercely compete for a single memory address.
 * **Comprehensive Phase Testing:** The integration trace rigorously validates the hardware logic across 8 distinct operational phases:
- * **Phase 1:** Initial cold misses, reading base addresses to transition each core into the Exclusive (E) state.
- * **Phase 2:** Local write hits and silent state promotions, verifying that modifying Exclusive lines generates zero bus traffic.
- * **Phase 3:** Multi-core shared cascades and peer-to-peer cache transfers, driving lines into the Shared (S) state across competing cores.
- * **Phase 4:** Writing to a Shared line, issuing a BusUpgr signal from Core 2 to invalidate remote copies.
- * **Phase 5:** Remote write misses on another core's Modified line, utilizing BusRdX to acquire the line and trigger a remote flush.
- * **Phase 6:** Associativity capacity limits and custom PLRU evictions, forcing Core 0 to evict a dirty line (0x100) to main memory.
- * **Phase 7:** High-contention line bouncing, testing rapid state ping-ponging when multiple cores compete for the same address.
- * **Phase 8:** Reading a clean Exclusive line, validating that it transitions to Shared without triggering unnecessary memory flushes.
+  * **Phase 1:** Initial cold misses, reading base addresses to transition each core into the Exclusive (E) state.
+  * **Phase 2:** Local write hits and silent state promotions, verifying that modifying Exclusive lines generates zero bus traffic.
+  * **Phase 3:** Multi-core shared cascades and peer-to-peer cache transfers, driving lines into the Shared (S) state across competing cores.
+  * **Phase 4:** Writing to a Shared line, issuing a `BusUpgr` signal from Core 2 to invalidate remote copies.
+  * **Phase 5:** Remote write misses on another core's Modified line, utilizing `BusRdX` to acquire the line and trigger a remote flush.
+  * **Phase 6:** Associativity capacity limits and custom PLRU evictions, forcing Core 0 to evict a dirty line (`0x100`) to main memory.
+  * **Phase 7:** High-contention line bouncing, testing rapid state ping-ponging when multiple cores compete for the same address.
+  * **Phase 8:** Reading a clean Exclusive line, validating that it transitions to Shared without triggering unnecessary memory flushes.
 
 ## How to Run
 
