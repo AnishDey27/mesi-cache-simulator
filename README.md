@@ -51,10 +51,11 @@ flowchart TD
 
 ## Key Features
 
-* **Full MESI Protocol FSM:** Implements complete textbook state transitions (M, E, S, I) for both local processor requests (`PrRd`, `PrWr`) and remote bus snoops (`BusRd`, `BusRdX`, `BusUpgr`, `Flush`).
+* **Trace-Driven Execution Engine:** Parses per-core Read/Write instruction traces to execute instructions sequentially (strictly one core at a time), ensuring a deterministic step-by-step flow while tracking global hit/miss ratios, cycle penalties, and System AMAT.
+* **Real-Hardware FSM & Bus Modeling:** Implements independent core controllers and a centralized snoop bus for complete MESI protocol state transitions (M, E, S, I) handling local requests (`PrRd`, `PrWr`) and remote snoop signals (`BusRd`, `BusRdX`, `BusUpgr`, `Flush`).
 * **Hardware-Accurate Latencies:** Dynamically calculates cycle costs based on parallel hardware lookups (L1 Cache Hit: **1 cycle** | Silent State Upgrades: **1 cycle** | Shared Write Upgrades: **3 cycles** | Peer-to-Peer Cache Intervention: **18 cycles** | Main Memory Fetch / Dirty Eviction: **103 cycles**).
-* **Tree Pseudo-LRU (PLRU) Eviction:** Implements a custom bitwise tree traversal algorithm to handle conflict misses and force dirty-line writebacks (`FLUSH`) to main memory.
-* **Sequential State Modeling:** Executes instructions sequentially (one core at a time) for perfect determinism. The simulator accurately models FSM states, cycle penalties, and bus traffic without carrying the physical overhead of moving actual data payloads.
+* **Tree Pseudo-LRU (PLRU) Eviction:** Implements a custom bitwise tree traversal algorithm inside set-associative cache arrays to manage capacity and conflict limits, forcing dirty-line writebacks (`FLUSH`) to main memory.
+* **Control-Plane Accuracy:** Accurately models FSM states, cycle penalties, and bus traffic without carrying the physical overhead of moving actual data payloads.
 
 ## System Configuration
 
@@ -68,14 +69,14 @@ The simulator is fully parameterized.
 * **The "4 C's" of Cache Misses:** Deterministically models Compulsory (cold), Capacity, Conflict, and Coherence misses.
 * **High-Contention Handling:** Accurately simulates cache line bouncing when multiple threads fiercely compete for a single memory address.
 * **Comprehensive Phase Testing:** The integration trace rigorously validates the hardware logic across 8 distinct operational phases:
-  * **Phase 1:** Independent cold allocations and Exclusive (E) state assignments.
-  * **Phase 2:** Local hits and silent state promotions (E -> M).
-  * **Phase 3:** Multi-core shared cascades and fast cache-to-cache data supply.
-  * **Phase 4:** Shared write upgrades and peer invalidations (`BusUpgr`).
-  * **Phase 5:** Remote write misses and dirty data stealing (`BusRdX`).
-  * **Phase 6:** Set conflicts, associativity capacity limits, and PLRU dirty evictions.
-  * **Phase 7:** Rapid ping-pong contention between multiple writing cores.
-  * **Phase 8:** Clean Exclusive state downgrades (bypassing unnecessary memory flushes).
+ * **Phase 1:** Initial cold misses, reading base addresses to transition each core into the Exclusive (E) state.
+ * **Phase 2:** Local write hits and silent state promotions, verifying that modifying Exclusive lines generates zero bus traffic.
+ * **Phase 3:** Multi-core shared cascades and peer-to-peer cache transfers, driving lines into the Shared (S) state across competing cores.
+ * **Phase 4:** Writing to a Shared line, issuing a BusUpgr signal from Core 2 to invalidate remote copies.
+ * **Phase 5:** Remote write misses on another core's Modified line, utilizing BusRdX to acquire the line and trigger a remote flush.
+ * **Phase 6:** Associativity capacity limits and custom PLRU evictions, forcing Core 0 to evict a dirty line (0x100) to main memory.
+ * **Phase 7:** High-contention line bouncing, testing rapid state ping-ponging when multiple cores compete for the same address.
+ * **Phase 8:** Reading a clean Exclusive line, validating that it transitions to Shared without triggering unnecessary memory flushes.
 
 ## How to Run
 
