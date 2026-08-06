@@ -65,6 +65,9 @@ The simulator is fully parameterized.
 - **64-Byte** cache lines
 - **2-way set-associative** cache (**4 sets**)
 
+## FSM Table
+<img width="1375" height="392" alt="image" src="https://github.com/user-attachments/assets/e37d8d6e-63de-451d-9543-6ea7afe0851c" />
+
 ## Scenario Coverage
 
 * **The "4 C's" of Cache Misses:** Deterministically models Compulsory (cold), Capacity, Conflict, and Coherence misses.
